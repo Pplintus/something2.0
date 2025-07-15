@@ -3,8 +3,10 @@
 
 using namespace sf;
 
-int main()
-{
+int main() {
+
     Game SOMETHING;
-    SOMETHING.runGame();
+    SOMETHING.run();
+    return 0;
+
 }

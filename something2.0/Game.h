@@ -1,14 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Player.h"
+#include "World.h"
 using namespace sf;
 
 class Game {
 public:
+
 	Game();
-	void runGame();
+	void run();
 	
 private:
+
 	void render();
+	void update(float time);
 
 	RenderWindow window;
+	Player player;
+	World world;
+	Clock clock;
 };

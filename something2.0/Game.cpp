@@ -1,24 +1,34 @@
 #include "Game.h"
-using namespace sf;
 
 Game::Game() {
-    window.create(VideoMode({ 800, 600 }), "Something");
+    window.create(VideoMode({800,600}), "Something");
 }
 
 
-void Game::runGame() {
+void Game::run() {
+    Clock clock;
     while (window.isOpen()) {
-        while (const std::optional event = window.pollEvent())
-        {
+
+        float time = clock.restart().asSeconds();
+
+        while (const std::optional event = window.pollEvent()){
+
             if (event->is<Event::Closed>())
                 window.close();
         }
+
+        update(time);
         render();
     }
 }
 
+void Game::update(float time) {
+    player.update(time);
+}
 
 void Game::render() {
     window.clear();
+    world.draw(window);
+    player.draw(window);
     window.display();
 }
