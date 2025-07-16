@@ -16,8 +16,8 @@ World::World() {
 	RightBorder.setPosition({ 800 - 25,0 });
 	RightBorder.setFillColor(Color::White);
 	
-	net.setSize({ 30,250 });
-	net.setPosition({ 800/2-15,600 - 250 });
+	net.setSize({ 40,300 });
+	net.setPosition({ 800/2-20,600 - 300 });
 	net.setFillColor(Color::White);
 }
 

@@ -16,7 +16,10 @@ private:
 	void update(float time);
 
 	RenderWindow window;
-	Player player;
+
+	Player player1{Color::Blue, 800 / 4 - 60 };
+	Player player2{ Color::Red, 800*3 / 4 - 60 };
+
 	World world;
 	Clock clock;
 };
