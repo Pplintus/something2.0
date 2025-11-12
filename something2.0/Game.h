@@ -2,6 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "World.h"
+#include "Ball.h"
+
+//////////////////////////////////ябъгэ бяеу назейрнб////////////////////////
+
 using namespace sf;
 
 class Game {
@@ -10,16 +14,19 @@ public:
 	Game();
 	void run();
 	
-private:
-
+	void stwindow();
+	void pre_render();
 	void render();
 	void update(float time);
 
 	RenderWindow window;
-
-	Player player1{Color::Blue, 800 / 4 - 60 };
-	Player player2{ Color::Red, 800*3 / 4 - 60 };
-
+	
 	World world;
 	Clock clock;
+
+	Player player1{world, Color::Blue, 800 / 4 - 60 };
+	Player player2{world, Color::Red, 800 * 3 / 4 - 60 };
+
+	Ball ball{world, player1, player2, 800/4 - 20 };
 };
+

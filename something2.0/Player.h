@@ -1,30 +1,33 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "World.h"
+
+////////////////////////////////////////ИГРОК/////////////////////////////////////
 
 using namespace sf;
 
 class Player {
 public:
-	Player(Color color, float X);
+	Player(World& world, Color color, float X );
 
 	void move(float time, ...);
 	void draw(RenderWindow& window);
 
-private:
 	RectangleShape character;
-	/*float Y_pozition;
-	bool Up = false;
-	bool Down = false;
-	float speed = 100.f;*/
-	float Y_position;
+	float speed = 200.f;
 	bool isJumping = false;
+
+	World& world;
+	float Y_position;
 	float jumpSpeed = 0.f;
 	const float gravity = 500.f;
 	const float startJumpSpeed = -400.f;
-	const float groundLevel = 600 - 25 - 160; // Уровень земли
-	float speed = 100.f;
+	const float groundLevel;
+	
+	int score = 0;
 };
 
+//доделаю потом, класс для нормального вида игрока
 //class HumanObject {
 //public:
 //	HumanObject();

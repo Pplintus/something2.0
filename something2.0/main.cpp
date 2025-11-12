@@ -3,9 +3,6 @@
 
 using namespace sf;
 
-//Keyboard::Key key = Keyboard::Key::A;
-//Color color = Color::White;
-
 int main() {
 
     Game SOMETHING;
