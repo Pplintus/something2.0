@@ -3,39 +3,57 @@
 Game::Game() {
     window.create(VideoMode({800,600}), "Something");
     window.setFramerateLimit(60);
+
+    setState(new MainMenuState());
 }
 
+void Game::setState(GameState* newState) {
+    if (state)
+        delete state;
+    state = newState;
+}
 
 void Game::run() {
     Clock clock;
-    float st = true;
+
     while (window.isOpen()) {
+        float dt = clock.restart().asSeconds();
 
-        float time = clock.restart().asSeconds();
-
-        while (const std::optional event = window.pollEvent()){
-
-            if (event->is<Event::Closed>())
-                window.close();
-        }
-        
-
-        //if (Mouse::isButtonPressed(Mouse::Button::Left) /*&& Mouse::getPosition().x >= 800 / 2 - 125 && Mouse::getPosition().y <= 600 / 2 - 75*/) { st = true; }
-        
-
-        if(st){
-            render();
-            update(time); 
-        }
-        else { pre_render(); }
-        
+        state->handleInput(*this);
+        state->update(*this, dt);
+        state->render(*this);
     }
 }
 
+//void Game::run() {
+//    Clock clock;
+//    float st = true;
+//    while (window.isOpen()) {
+//
+//        float time = clock.restart().asSeconds();
+//
+//        while (const std::optional event = window.pollEvent()){
+//
+//            if (event->is<Event::Closed>())
+//                window.close();
+//        }
+//        
+//        if(st){
+//            
+//            render();
+//            
+//            update(time); 
+//        }
+//        else { pre_render(); }
+//        
+//    }
+//}
+
 void Game::update(float time) {
-    player1.move(time, Keyboard::Key::A, Keyboard::Key::D, Keyboard::Key::W/*, Keyboard::Key::W, Keyboard::Key::S*/);
-    player2.move(time, Keyboard::Key::Left, Keyboard::Key::Right, Keyboard::Key::Up/*, Keyboard::Key::Up, Keyboard::Key::Down*/);
+    player1.move(time, Keyboard::Key::A, Keyboard::Key::D, Keyboard::Key::W);
+    player2.move(time, Keyboard::Key::Left, Keyboard::Key::Right, Keyboard::Key::Up);
     ball.update(time);
+    world.update();
 }
 
 void Game::pre_render() {
@@ -45,7 +63,6 @@ void Game::pre_render() {
     window.clear();
     window.draw(st_rectangle);
     window.display();
-
 }
 
 void Game::render() {
@@ -57,6 +74,4 @@ void Game::render() {
     window.display();
 }
 
-void Game::stwindow() {
 
-}

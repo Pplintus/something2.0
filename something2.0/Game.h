@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "World.h"
 #include "Ball.h"
+#include "GameState.h"
 
 //////////////////////////////////ябъгэ бяеу назейрнб////////////////////////
 
@@ -13,8 +14,7 @@ public:
 
 	Game();
 	void run();
-	
-	void stwindow();
+
 	void pre_render();
 	void render();
 	void update(float time);
@@ -27,6 +27,10 @@ public:
 	Player player1{world, Color::Blue, 800 / 4 - 60 };
 	Player player2{world, Color::Red, 800 * 3 / 4 - 60 };
 
-	Ball ball{world, player1, player2, 800/4 - 20 };
+	Ball ball{world, player1, player2};
+
+	GameState* state;
+	void setState(GameState* newState);
+
 };
 

@@ -56,7 +56,3 @@ void Player::move(float time, ...) {
 void Player::draw(RenderWindow& window) {
 	window.draw(character);
 }
-
-//HumanObject::HumanObject() {
-//
-//}

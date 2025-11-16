@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "windows.h"
 
-////////////////////////////Игровой мир, все объекты на карте и сама карта///////////////////////
+////////////////////////////Стенки и тд///////////////////////
 
 using namespace sf;
 
@@ -9,6 +10,7 @@ class World {
 public:
 	World();
 	void draw(RenderWindow& window);
+	void update();
 
 	float BorderSize = 40;
 
@@ -18,4 +20,15 @@ public:
 	RectangleShape RightBorder;
 
 	RectangleShape net;
+
+	Font* font;
+	Text* score1;
+	Text* score2;
+	Text* result;
+
+	int n1 = 0;
+	int n2 = 0;
+
+	Clock resultClock;
+	bool resultVisible = false;
 };

@@ -13,8 +13,9 @@ public:
 	void move(float time, ...);
 	void draw(RenderWindow& window);
 
+
 	RectangleShape character;
-	float speed = 200.f;
+	float speed = 100.f;
 	bool isJumping = false;
 
 	World& world;
@@ -27,13 +28,3 @@ public:
 	int score = 0;
 };
 
-//доделаю потом, класс для нормального вида игрока
-//class HumanObject {
-//public:
-//	HumanObject();
-//	void setSize(int height, int wight);
-//	void setPozition(int x, int y);
-//	void setColor(Color color);
-//	void move(int x, int y);
-//
-//};

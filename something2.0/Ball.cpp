@@ -2,12 +2,12 @@
 
 //–¿«Ã≈–€ »√–Œ ¿ 120ı160
 
-Ball::Ball(World& world, Player& player1, Player& player2, float X) : world{ world }, player1{ player1 }, player2{ player2 }
+Ball::Ball(World& world, Player& player1, Player& player2) : world{ world }, player1{ player1 }, player2{ player2 }
 {
     ball.setSize({ 40,40 });
     ball.setFillColor(Color::White);
-    ball.setPosition({ X,600 / 2 - 120 });
-    position = Vector2f(X, 600 / 2 - 120);
+    ball.setPosition({ 800 / 2 - 20,600 / 4 - 100 });
+    position = Vector2f(800 / 2 - 20, 600 / 4 - 100);
 
 }
 
@@ -32,13 +32,9 @@ void Ball::update(float time) {
         ball.getGlobalBounds().findIntersection(world.LeftBorder.getGlobalBounds()) ) {
         velocity.x = -velocity.x;
     }
-    //
+    //ÔÓÚÓÎÓÍ
     if (ball.getGlobalBounds().findIntersection(world.UpBorder.getGlobalBounds())) {
         velocity.y = bounceSpeed*0.5f;
-    }
-
-    if (ball.getGlobalBounds().findIntersection(world.DownBorder.getGlobalBounds())) {
-        velocity.y = -bounceSpeed*0.5f;
     }
 
     if (ball.getGlobalBounds().findIntersection(world.net.getGlobalBounds())) {
@@ -48,6 +44,15 @@ void Ball::update(float time) {
         if (ball.getPosition().y+30 <= world.net.getPosition().y) {
             velocity.y = -velocity.y;
         }
+    }
+
+    if (ball.getGlobalBounds().findIntersection(world.DownBorder.getGlobalBounds())) {
+        if (ball.getPosition().x < 800 / 2) world.n2 += 1;
+        else world.n1 += 1;
+        position = Vector2f(800 / 2 - 20, 600 / 4 - 100);
+        velocity = { 200.f * r(), 150.f };
+        ball.setPosition(position);
+
     }
 
 }
