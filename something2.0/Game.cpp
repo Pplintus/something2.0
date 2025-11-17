@@ -2,7 +2,7 @@
 
 Game::Game() {
     window.create(VideoMode({800,600}), "Something");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
 
     setState(new MainMenuState());
 }
@@ -24,30 +24,6 @@ void Game::run() {
         state->render(*this);
     }
 }
-
-//void Game::run() {
-//    Clock clock;
-//    float st = true;
-//    while (window.isOpen()) {
-//
-//        float time = clock.restart().asSeconds();
-//
-//        while (const std::optional event = window.pollEvent()){
-//
-//            if (event->is<Event::Closed>())
-//                window.close();
-//        }
-//        
-//        if(st){
-//            
-//            render();
-//            
-//            update(time); 
-//        }
-//        else { pre_render(); }
-//        
-//    }
-//}
 
 void Game::update(float time) {
     player1.move(time, Keyboard::Key::A, Keyboard::Key::D, Keyboard::Key::W);

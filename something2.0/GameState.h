@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <map>
 using namespace sf;
 
 class Game;
 
-///////////////////////////////ÃÂÌ˛¯Í‡///////////////////////////////
+///////////////////////////////Ã≈Õﬁÿ ¿???///////////////////////////////
 
 class GameState {
 public:
@@ -15,19 +15,15 @@ public:
     virtual void render(Game& game) = 0;
 };
 
-enum class StateType {
-    MAIN_MENU,
-    PLAYING,
-    GAME_OVER
-};
-
 class MainMenuState : public GameState {
 private:
+    Clock stateTimer;
+    float COOLDOWN_TIME = 0.2f;
     Font* font;
     Text* title;
     Text* playButton;
+    Text* settingsButton;
     Text* exitButton;
-
     int selected = 0;
 
 public:
@@ -43,4 +39,66 @@ public:
     void handleInput(Game& game) override;
     void update(Game& game, float deltaTime) override;
     void render(Game& game) override;
+};
+
+class PauseState : public GameState {
+private:
+    Clock stateTimer;
+    float COOLDOWN_TIME = 0.2f;
+    Font* font;
+    Text* pause;
+    Text* gameContinue;
+    Text* exitGame;
+    int selected = 0;
+public:
+    PauseState();
+    ~PauseState();
+    void handleInput(Game& game) override;
+    void update(Game& game, float deltaTime) override;
+    void render(Game& game) override;
+};
+
+class SettingsState : public GameState {
+private:
+    Clock stateTimer;
+    float COOLDOWN_TIME = 0.2f;
+    Font* font;
+    Text* title;
+    Text* player1ColorText;
+    Text* player2ColorText;
+    int selected = 0;
+
+public:
+    SettingsState();
+    ~SettingsState();
+    void handleInput(Game& game) override;
+    void update(Game& game, float deltaTime) override;
+    void render(Game& game) override;
+
+};
+
+class SetColorState : public GameState {
+private:
+    Clock stateTimer; 
+    float COOLDOWN_TIME = 0.2f;
+    Font* font;
+    Text* Blue;
+    Text* Red;
+    Text* Green;
+    Text* Yellow;
+    Text* Magneta;
+    Text* Cyan;
+    int selected = 0;
+    int numPlayer;
+
+    std::map<int, Color> colors;
+
+
+public:
+    SetColorState(int numPlayer); //1 - 1È »„ÓÍ, 2 - 2È Ë„ÓÍ
+    ~SetColorState();
+    void handleInput(Game& game) override;
+    void update(Game& game, float deltaTime) override;
+    void render(Game& game) override;
+
 };
