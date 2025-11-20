@@ -3,9 +3,19 @@
 
 Player::Player(World& world, Color color, float X) : world{ world }, groundLevel{ 600 - world.BorderSize - 160 }
 {
-	character.setSize({ 120, 160 });//–¿«Ã≈–€
+	character.setSize({ 120, 160 });
 	character.setFillColor(color);
-	character.setPosition({ X,  600 - world.BorderSize - 160 });
+	character.setPosition({ X, 600 - world.BorderSize - 160 });
+
+	Y_position = groundLevel;
+}
+
+Player::Player(World& world, Texture *texture, float X) : world{ world }, groundLevel{ 600 - world.BorderSize - 160 }
+{
+	character.setSize({ 120, 160 });
+	character.setTexture(texture);
+	character.setPosition({ X, 600 - world.BorderSize - 160 });
+
 	Y_position = groundLevel;
 }
 
@@ -56,3 +66,4 @@ void Player::move(float time, ...) {
 void Player::draw(RenderWindow& window) {
 	window.draw(character);
 }
+

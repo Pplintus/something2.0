@@ -44,14 +44,21 @@ void MainMenuState::handleInput(Game& game) {
     }
 
     if (stateTimer.getElapsedTime().asSeconds() > COOLDOWN_TIME) {
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num1))
-            selected = 0;
+        if (Keyboard::isKeyPressed(Keyboard::Key::Down) && !downPressed) {
+            selected = (selected + 1) % 3;
+            downPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Down)) {
+            downPressed = false;
+        }
 
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num2))
-            selected = 1;
-
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num3))
-            selected = 2;
+        if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !upPressed) {
+            selected = (selected - 1 + 3) % 3;
+            upPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Up)) {
+            upPressed = false;
+        }
 
         if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
             if (selected == 0) game.setState(new PlayingState());
@@ -115,14 +122,29 @@ void SettingsState::handleInput(Game& game) {
             game.window.close();
     }
     if (stateTimer.getElapsedTime().asSeconds() > COOLDOWN_TIME) {
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num1)) selected = 0;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num2)) selected = 1;
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Down) && !downPressed) {
+            selected = (selected + 1) % 2;
+            downPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Down)) {
+            downPressed = false;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !upPressed) {
+            selected = (selected - 1 + 2) % 2;
+            upPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Up)) {
+            upPressed = false;
+        }
+
         if (Keyboard::isKeyPressed(Keyboard::Key::Escape))game.setState(new MainMenuState());
 
 
         if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
-            if (selected == 0) game.setState(new SetColorState(1));
-            else if (selected == 1) game.setState(new SetColorState(2));
+            if (selected == 0) game.setState(new Settings2State(1));
+            else if (selected == 1) game.setState(new Settings2State(2));
 
         }
     }
@@ -142,6 +164,121 @@ void SettingsState::render(Game& game) {
 
     game.window.display();
 }
+
+//Я щас вскроюсь
+Settings2State::Settings2State(int numPlayer) {
+    font = new Font();
+    font->openFromFile("8bitoperatorregular.ttf");
+    this->numPlayer = numPlayer;
+
+    title = new Text(*font);
+    title->setString("SETTINGS");
+    title->setCharacterSize(50);
+    title->setPosition({ 265, 80 });
+
+    setCustom = new Text(*font);
+    setCustom->setString("CHANGE COLOR");
+    setCustom->setCharacterSize(50);
+    setCustom->setPosition({ 200, 250 });
+
+    setTexture = new Text(*font);
+    setTexture->setString("LOAD TEXTURE");
+    setTexture->setCharacterSize(50);
+    setTexture->setPosition({ 200, 350 });
+
+    stateTimer.restart();
+}
+
+Settings2State::~Settings2State() {
+    delete title;
+    delete setCustom;
+    delete setTexture;
+    delete font;
+}
+
+void Settings2State::handleInput(Game& game) {
+    while (const std::optional event = game.window.pollEvent()) {
+        if (event->is<Event::Closed>())
+            game.window.close();
+    }
+    if (stateTimer.getElapsedTime().asSeconds() > COOLDOWN_TIME) {
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Down) && !downPressed) {
+            selected = (selected + 1) % 2;
+            downPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Down)) {
+            downPressed = false;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !upPressed) {
+            selected = (selected - 1 + 2) % 2;
+            upPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Up)) {
+            upPressed = false;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Escape))game.setState(new SettingsState());
+
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
+            if (selected == 0) game.setState(new SetColorState(numPlayer));
+            else if (selected == 1) {
+                Texture t(OpenFileDialog());
+                if (numPlayer == 1) {
+                    game.player1Texture = t;
+                    game.player1.character.setFillColor(Color::White);
+                    game.player1.character.setTexture(&game.player1Texture);
+                }
+                else {
+                    game.player2Texture = t;
+                    game.player2.character.setFillColor(Color::White);
+                    game.player2.character.setTexture(&game.player2Texture);
+                }
+                game.setState(new SettingsState());
+            }
+
+        }
+    }
+}
+
+void Settings2State::update(Game& game, float deltaTime) {
+    setCustom->setFillColor(selected == 0 ? Color::Red : Color::White);
+    setTexture->setFillColor(selected == 1 ? Color::Red : Color::White);
+}
+
+void Settings2State::render(Game& game) {
+    game.window.clear();
+
+    game.window.draw(*title);
+    game.window.draw(*setCustom);
+    game.window.draw(*setTexture);
+
+    game.window.display();
+}
+
+std::string Settings2State::OpenFileDialog() {
+    // Используем ANSI версию функций
+    OPENFILENAMEA ofn;  // A-версия для ANSI
+    char szFile[260] = { 0 };
+
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = NULL;
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = sizeof(szFile);
+    ofn.lpstrFilter = "PNG Files\0*.png\0All Files\0*.*\0";  // Обычная ANSI строка
+    ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileNameA(&ofn) == TRUE) {  // A-версия функции
+        return std::string(szFile);
+    }
+    return "";
+}
+
+
 
 //ВЫБОР ЦВЕТА
 SetColorState::SetColorState(int numPlayer) {
@@ -211,12 +348,21 @@ void SetColorState::handleInput(Game& game) {
             game.window.close();
     }
     if (stateTimer.getElapsedTime().asSeconds() > COOLDOWN_TIME) {
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num1)) selected = 0;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num2)) selected = 1;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num3)) selected = 2;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num4)) selected = 3;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num5)) selected = 4;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num6)) selected = 5;
+        if (Keyboard::isKeyPressed(Keyboard::Key::Down) && !downPressed) {
+            selected = (selected + 1) % 6;
+            downPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Down)) {
+            downPressed = false;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !upPressed) {
+            selected = (selected - 1 + 6) % 6;
+            upPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Up)) {
+            upPressed = false;
+        }
         if (Keyboard::isKeyPressed(Keyboard::Key::Escape)) game.setState(new SettingsState);
 
         if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
@@ -231,7 +377,7 @@ void SetColorState::handleInput(Game& game) {
             }
         }
     }
-    
+
 }
 
 void SetColorState::update(Game& game, float deltaTime) {
@@ -277,10 +423,15 @@ PauseState::PauseState() {
     gameContinue->setCharacterSize(50);
     gameContinue->setPosition({ 255, 250 });
 
+    mainMenu = new Text(*font);
+    mainMenu->setString("MAIN MENU");
+    mainMenu->setCharacterSize(50);
+    mainMenu->setPosition({ 230, 350 });
+
     exitGame = new Text(*font);
     exitGame->setString("EXIT");
     exitGame->setCharacterSize(50);
-    exitGame->setPosition({ 320, 350 });
+    exitGame->setPosition({ 320, 450 });
 
     stateTimer.restart();
 }
@@ -288,6 +439,7 @@ PauseState::PauseState() {
 PauseState::~PauseState() {
     delete exitGame;
     delete gameContinue;
+    delete mainMenu;
     delete font;
 }
 
@@ -297,13 +449,30 @@ void PauseState::handleInput(Game& game) {
             game.window.close();
     }
     if (stateTimer.getElapsedTime().asSeconds() > COOLDOWN_TIME) {
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num1)) selected = 0;
-        if (Keyboard::isKeyPressed(Keyboard::Key::Num2)) selected = 1;
+        if (Keyboard::isKeyPressed(Keyboard::Key::Down) && !downPressed) {
+            selected = (selected + 1) % 3;
+            downPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Down)) {
+            downPressed = false;
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !upPressed) {
+            selected = (selected - 1 + 3) % 3;
+            upPressed = true;
+        }
+        else if (!Keyboard::isKeyPressed(Keyboard::Key::Up)) {
+            upPressed = false;
+        }
 
 
         if (Keyboard::isKeyPressed(Keyboard::Key::Enter)) {
             if (selected == 0) game.setState(new PlayingState());
-            else if (selected == 1) game.window.close();
+            else if (selected == 1) {
+                game.setState(new MainMenuState());
+                game.restart();
+            }
+            else if (selected == 2) game.window.close();
 
         }
     }
@@ -311,7 +480,8 @@ void PauseState::handleInput(Game& game) {
 
 void PauseState::update(Game& game, float dt) {
     gameContinue->setFillColor(selected == 0 ? Color::Red : Color::White);
-    exitGame->setFillColor(selected == 1 ? Color::Red : Color::White);
+    mainMenu->setFillColor(selected == 1 ? Color::Red : Color::White);
+    exitGame->setFillColor(selected == 2 ? Color::Red : Color::White);
 }
 
 void PauseState::render(Game& game) {
@@ -319,6 +489,7 @@ void PauseState::render(Game& game) {
 
     game.window.draw(*pause);
     game.window.draw(*gameContinue);
+    game.window.draw(*mainMenu);
     game.window.draw(*exitGame);
 
     game.window.display();

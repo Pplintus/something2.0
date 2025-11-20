@@ -9,12 +9,12 @@ using namespace sf;
 class Player {
 public:
 	Player(World& world, Color color, float X );
-
+	Player(World& world, Texture *texture, float X);
 	void move(float time, ...);
 	void draw(RenderWindow& window);
 
-
 	RectangleShape character;
+	
 	float speed = 100.f;
 	bool isJumping = false;
 

@@ -32,6 +32,7 @@ public:
 	Ball(World& world, Player& player1, Player& player2);
 	void update(float time);
 	void draw(RenderWindow& window);
+	void ballRestart();
 
 	RectangleShape ball;
 

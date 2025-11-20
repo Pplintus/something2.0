@@ -1,6 +1,7 @@
 #include "Game.h"
 
-Game::Game() {
+Game::Game() 
+{
     window.create(VideoMode({800,600}), "Something");
     window.setFramerateLimit(120);
 
@@ -50,4 +51,14 @@ void Game::render() {
     window.display();
 }
 
-
+void Game::restart() {
+    world.n1 = 0;
+    world.n2 = 0;
+    player1.character.setPosition({ 800 / 4 - 60, 600 - world.BorderSize - 160 });
+    player1.Y_position = player1.groundLevel;
+    player1.isJumping = false;
+    player2.character.setPosition({ 800 * 3 / 4 - 60, 600 - world.BorderSize - 160 });
+    player2.Y_position = player2.groundLevel;
+    player2.isJumping = false;
+    ball.ballRestart();
+}

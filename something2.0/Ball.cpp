@@ -49,12 +49,16 @@ void Ball::update(float time) {
     if (ball.getGlobalBounds().findIntersection(world.DownBorder.getGlobalBounds())) {
         if (ball.getPosition().x < 800 / 2) world.n2 += 1;
         else world.n1 += 1;
-        position = Vector2f(800 / 2 - 20, 600 / 4 - 100);
-        velocity = { 200.f * r(), 150.f };
-        ball.setPosition(position);
+        ballRestart();
 
     }
 
+}
+
+void Ball::ballRestart() {
+    position = Vector2f(800 / 2 - 20, 600 / 4 - 100);
+    velocity = { 200.f * r(), 150.f };
+    ball.setPosition(position);
 }
 
 //переделаю потом
