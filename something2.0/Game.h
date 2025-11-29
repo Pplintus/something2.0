@@ -14,10 +14,6 @@ public:
 
 	Game();
 	void run();
-
-	void pre_render();
-	void render();
-	void update(float time);
 	void restart();
 
 	RenderWindow window;

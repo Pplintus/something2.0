@@ -522,3 +522,4 @@ void PlayingState::render(Game& game) {
 
     game.window.display();
 }
+
